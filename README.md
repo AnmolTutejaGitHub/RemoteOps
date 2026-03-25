@@ -50,30 +50,37 @@ npm run dev
 npm start
 ```
 
-### Goals
-
+# RemoteOps — Project Specification
+ 
+## Goals
+ 
 - To simplify remote server management through a centralized platform.
 - To provide real-time monitoring of system metrics such as CPU and RAM usage.
 - To enable secure execution of SSH commands on remote machines.
 - To reduce the complexity of managing multiple servers.
 - To build a scalable and efficient system for remote operations.
-
-### Specifications
-
-#### Functional Requirements
-
+- To provide an interactive browser-based terminal emulator for live shell access to remote servers.
+ 
+## Specifications
+ 
+### Functional Requirements
+ 
 - Users can connect to remote servers using SSH credentials.
 - The system can fetch and display CPU utilization in real time.
 - The system can fetch and display RAM usage (total and used).
 - Users can execute shell commands on remote servers.
 - The system maintains a history of executed commands.
 - Supports both personal and group-based server connections.
-
-#### Non-Functional Requirements
-
+- Users can open an interactive browser-based terminal with full PTY (pseudo terminal) support — enabling tools like `vim`, `top`, and tab completion — via a persistent WebSocket connection relayed through the application server using SSH.
+- The system supports multiple concurrent terminal sessions across different servers, with each session maintaining an isolated SSH shell channel.
+ 
+### Non-Functional Requirements
+ 
 - The system ensures secure handling of SSH credentials.
 - The application provides low-latency updates for system metrics.
 - The backend is designed to handle multiple concurrent connections.
+- WebSocket connections for terminal sessions must maintain sub-100ms keystroke-to-render latency under normal network conditions.
+- SSH connections to remote servers are pooled per server — multiple terminal sessions to the same server reuse one underlying SSH connection via independent shell channels.
 
 ### Changelog
 

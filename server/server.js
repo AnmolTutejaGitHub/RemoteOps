@@ -16,9 +16,9 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(userRoute,'/api/user');
-app.use(groupRoute,'/api/group');
-app.use(connectionRoute,'/api/connection');
+app.use('/api/user', userRoute);
+app.use('/api/group', groupRoute);
+app.use('/api/connection', connectionRoute);
 
 app.listen(PORT,()=>{
     console.log(`Server is listening on PORT ${PORT}`)
