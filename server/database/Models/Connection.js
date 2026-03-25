@@ -1,0 +1,40 @@
+const mongoose = require('mongoose');
+
+const ConnectionSchema = new mongoose.Schema({
+    sshEncrypted : {
+        type : String,
+        required : true,
+    },
+    type : {
+        type : String,
+        enum : ['Personal','Group'],
+        required : true,
+    },
+    owner_id : {
+        type : String, // grp_id or user_id
+    },
+    commandHistory : {
+        type : [String]
+    },
+    CPUInfo : {
+        usagePercent: { type: Number,
+            min: 0,
+            max: 100 
+        },
+        lastUpdated: { type: Date, }
+    },
+
+    RamInfo : {
+        total: { type: Number },
+        used: { type: Number },
+        lastUpdated: { type: Date, }
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        immutable: true
+    },
+})
+
+const Connection = mongoose.model('Connection', ConnectionSchema);
+module.exports = Connection;
