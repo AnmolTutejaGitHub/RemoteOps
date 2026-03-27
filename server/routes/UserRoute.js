@@ -6,9 +6,9 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
 const bcrypt = require("bcrypt");
-const {LoginLimiter,SignupLimiter} = require("../middleware/RateLimiters");
 
-router.post('/login', LoginLimiter, async (req, res) => {
+
+router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -36,7 +36,7 @@ router.post('/login', LoginLimiter, async (req, res) => {
     }
 })
 
-router.post('/signup',SignupLimiter, async (req, res) => {
+router.post('/signup', async (req, res) => {
     const { email, password,confirm_password, name } = req.body;
     try {
         if(password != confirm_password){
@@ -59,20 +59,24 @@ router.post('/signup',SignupLimiter, async (req, res) => {
     }
 })
 
-router.post("/generate-Verification-Token", Auth, async (req, res) => {
+router.post("/generate-Verification-Token", async (req, res) => {
     try {
-      const id = req.userId;
-      const user = await User.findById(id);
-      const {email} = req.body;
-  
-      if (!user) {
-        return res.status(400).send({ message: "Invalid user ID" });
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).send({ message: "Email is required" });
       }
 
-      if(email!=user.email){
-        return res.status(400).send({ message: "signup email and this one doesn't match" });
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).send({ message: "No account found with this email" });
       }
-  
+
+      if (user.isVerified) {
+        return res.status(400).send({ message: "This account is already verified" });
+      }
+
       const token = jwt.sign(
         { user_id: user._id, email: user.email },
         config.JWT_TOKEN_SIGNUP_MAIL_SECRET,
@@ -121,6 +125,7 @@ router.post("/generate-Verification-Token", Auth, async (req, res) => {
       res.status(400).send({ message: err.message });
     }
   });
+
 
 router.get("/verify/:token", async (req, res) => {
     try {

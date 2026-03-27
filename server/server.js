@@ -20,7 +20,7 @@ app.use('/api/user', userRoute);
 app.use('/api/group', groupRoute);
 app.use('/api/connection', connectionRoute);
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`Server is listening on PORT ${PORT}`)
 })
 
