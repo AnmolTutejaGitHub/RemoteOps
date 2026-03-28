@@ -7,17 +7,20 @@ const GroupSchema = new mongoose.Schema({
         trim: true,
         unique: true
     },
-    createdBy : {
-        type : String
+    createdBy: {
+        type: String
     },
-    members : {
-        type : [String]
+    members: {
+        type: [String]
     },
     createdAt: {
         type: Date,
         default: Date.now,
         immutable: true
     },
+    connections: {
+        type: [String]
+    }
 })
 
 const Group = mongoose.model('Group', GroupSchema);

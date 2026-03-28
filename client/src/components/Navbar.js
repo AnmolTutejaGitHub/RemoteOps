@@ -4,29 +4,31 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   async function fetchUser() {
-      const token = Cookies.get("token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const res = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/user/verifytokenAndGetUserDetails`,
-          { token }
-        );
-        setUsername(res.data.username);
-      } catch {
-        Cookies.remove("token");
-      } finally {
-        setLoading(false);
-      }
+    const token = Cookies.get("token");
+    if (!token) {
+      setLoading(false);
+      return;
     }
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/verifytokenAndGetUserDetails`,
+        { token }
+      );
+      setUsername(res.data.username);
+    } catch {
+      Cookies.remove("token");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     fetchUser();
@@ -35,6 +37,7 @@ export default function Navbar() {
   function handleLogout() {
     Cookies.remove("token");
     setUsername(null);
+    router.push("/");
   }
 
   return (

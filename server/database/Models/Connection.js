@@ -5,6 +5,10 @@ const ConnectionSchema = new mongoose.Schema({
         type : String,
         required : true,
     },
+    name : {
+        type : String,
+        required : true,
+    },
     type : {
         type : String,
         enum : ['Personal','Group'],
