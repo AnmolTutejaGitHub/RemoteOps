@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 
 const CommandHistorySchema = new mongoose.Schema({
     connection_id : {
-        type : String,
-        required : true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Connection",
+        required: true,
     },
     command : {
         type : String,

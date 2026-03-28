@@ -11,11 +11,18 @@ const ConnectionSchema = new mongoose.Schema({
     },
     type : {
         type : String,
-        enum : ['Personal','Group'],
+        enum : ['personal','group'],
         required : true,
     },
-    owner_id : {
-        type : String, // grp_id or user_id
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+        },
+    group: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Group",
+        default: null
     },
     hostName : {
         type : String,

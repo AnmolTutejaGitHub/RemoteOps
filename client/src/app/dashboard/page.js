@@ -47,7 +47,7 @@ export default function Dashboard() {
               onClick={() => router.push("/add-project")}
               className="bg-[#E5E5E5] text-black text-sm px-4 py-2 rounded-md hover:bg-white transition-colors"
             >
-              Manage Projects
+              Add Projects
             </button>
             <button
               onClick={() => router.push("/managegroups")}

@@ -8,19 +8,19 @@ const GroupSchema = new mongoose.Schema({
         unique: true
     },
     createdBy: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
-    members: {
-        type: [String]
-    },
+    members: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }],
     createdAt: {
         type: Date,
         default: Date.now,
         immutable: true
     },
-    connections: {
-        type: [String]
-    }
 })
 
 const Group = mongoose.model('Group', GroupSchema);
