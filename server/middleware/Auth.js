@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 
 const Auth = (req, res, next) => {
-    const token = req.header("Authorization")?.split(" ")[1];
+    const token = req.cookies?.token;
 
-    if (!token) return res.status(400).json({ message: "No token found" });
+    if (!token) return res.status(401).json({ message: "Not authenticated" });
 
     jwt.verify(token, config.JWT_TOKEN_SECRET, (err, decoded) => {
-        if (err) return res.status(400).json({ message: "Invalid Token" });
+        if (err) return res.status(401).json({ message: "Invalid or expired token" });
         req.userId = decoded.user_id;
         next();
     });

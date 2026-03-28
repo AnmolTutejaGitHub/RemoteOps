@@ -7,6 +7,7 @@ require('./database/mongoose');
 const userRoute = require('./routes/UserRoute');
 const groupRoute = require('./routes/GroupRoute');
 const connectionRoute = require('./routes/ConnectionRoute');
+const cookieParser = require("cookie-parser");
 
 const PORT = config.PORT;
 app.use(cors({
@@ -15,6 +16,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/user', userRoute);
 app.use('/api/group', groupRoute);

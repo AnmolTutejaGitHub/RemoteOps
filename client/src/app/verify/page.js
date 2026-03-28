@@ -37,9 +37,7 @@ export default function Verify() {
           </p>
         </div>
         <div className="flex flex-col gap-2">
-          <label htmlFor="email" className="text-sm">
-            Email
-          </label>
+          <label htmlFor="email" className="text-sm">Email</label>
           <input
             type="email"
             id="email"
@@ -57,9 +55,7 @@ export default function Verify() {
         </button>
         <p className="text-sm text-center text-[#6B6B6B]">
           Already verified?{" "}
-          <Link href="/login" className="text-white hover:underline">
-            Login
-          </Link>
+          <Link href="/login" className="text-white hover:underline">Login</Link>
         </p>
       </div>
     </section>

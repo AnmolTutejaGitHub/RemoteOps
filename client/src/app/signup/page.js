@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Cookies from "js-cookie";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -17,17 +16,16 @@ export default function Signup() {
   async function signup() {
     const id = toast.loading("Creating your account...");
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user/signup`,
         {
           email,
           password,
           confirm_password,
           name: username,
-        }
+        },
+        { withCredentials: true }
       );
-      const data = response.data;
-      Cookies.set("token", data.token, { sameSite: "Lax" });
       toast.success("Signup successful!");
       router.push("/verify");
     } catch (err) {
@@ -53,9 +51,7 @@ export default function Signup() {
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <label htmlFor="name" className="text-sm">
-              Username
-            </label>
+            <label htmlFor="name" className="text-sm">Username</label>
             <input
               type="text"
               id="name"
@@ -66,9 +62,7 @@ export default function Signup() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="text-sm">
-              Email
-            </label>
+            <label htmlFor="email" className="text-sm">Email</label>
             <input
               type="email"
               id="email"
@@ -79,26 +73,20 @@ export default function Signup() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="password" className="text-sm">
-              Password
-            </label>
+            <label htmlFor="password" className="text-sm">Password</label>
             <input
               type="password"
               id="password"
-              placeholder=""
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="bg-[#212121] p-2 rounded-sm border border-[#434343] focus:border-white focus:outline-none text-sm"
             />
           </div>
           <div className="flex flex-col gap-2">
-            <label htmlFor="confirmPassword" className="text-sm">
-              Confirm Password
-            </label>
+            <label htmlFor="confirmPassword" className="text-sm">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
-              placeholder=""
               value={confirm_password}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="bg-[#212121] p-2 rounded-sm border border-[#434343] focus:border-white focus:outline-none text-sm"
@@ -113,9 +101,7 @@ export default function Signup() {
         </button>
         <p className="text-sm text-center text-[#6B6B6B]">
           Already have an account?{" "}
-          <Link href="/login" className="text-white hover:underline">
-            Sign in
-          </Link>
+          <Link href="/login" className="text-white hover:underline">Sign in</Link>
         </p>
       </div>
     </section>

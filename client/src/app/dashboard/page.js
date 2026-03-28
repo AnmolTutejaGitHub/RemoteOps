@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Cookies from "js-cookie";
 import Navbar from "@/components/Navbar";
 
 export default function Dashboard() {
@@ -11,16 +10,13 @@ export default function Dashboard() {
   const router = useRouter();
 
   async function fetchUser() {
-    const token = Cookies.get("token");
-    if (!token) { router.push("/login"); return; }
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user/verifytokenAndGetUserDetails`,
-        { token }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`,
+        { withCredentials: true }
       );
       setUser(res.data);
     } catch {
-      Cookies.remove("token");
       router.push("/login");
     }
   }

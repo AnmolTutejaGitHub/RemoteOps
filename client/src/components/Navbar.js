@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
@@ -12,19 +11,14 @@ export default function Navbar() {
   const router = useRouter();
 
   async function fetchUser() {
-    const token = Cookies.get("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/user/verifytokenAndGetUserDetails`,
-        { token }
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`,
+        { withCredentials: true }
       );
       setUsername(res.data.username);
     } catch {
-      Cookies.remove("token");
+      setUsername(null);
     } finally {
       setLoading(false);
     }
@@ -34,8 +28,11 @@ export default function Navbar() {
     fetchUser();
   }, []);
 
-  function handleLogout() {
-    Cookies.remove("token");
+  async function handleLogout() {
+    await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/user/logout`,
+      { withCredentials: true }
+    );
     setUsername(null);
     router.push("/");
   }
@@ -43,15 +40,9 @@ export default function Navbar() {
   return (
     <nav className="flex flex-row justify-between items-center p-4">
       <div className="flex flex-row gap-6 items-center">
-        <Link href="/" className="font-semibold">
-          RemoteOps
-        </Link>
-        <Link href="/" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">
-          Get Started
-        </Link>
-        <Link href="/#features" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">
-          Features
-        </Link>
+        <Link href="/" className="font-semibold">RemoteOps</Link>
+        <Link href="/" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Get Started</Link>
+        <Link href="/#features" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Features</Link>
       </div>
       <div className="flex flex-row gap-2 items-center">
         {loading ? (
@@ -72,14 +63,10 @@ export default function Navbar() {
         ) : (
           <div className="flex flex-row gap-2">
             <Link href="/login">
-              <button className="bg-[#E5E5E5] text-black text-sm p-2 px-3 rounded-md hover:bg-white transition-colors">
-                Login
-              </button>
+              <button className="bg-[#E5E5E5] text-black text-sm p-2 px-3 rounded-md hover:bg-white transition-colors">Login</button>
             </Link>
             <Link href="/signup">
-              <button className="border border-white text-sm p-2 px-3 rounded-md hover:bg-white hover:text-black transition-colors">
-                Signup
-              </button>
+              <button className="border border-white text-sm p-2 px-3 rounded-md hover:bg-white hover:text-black transition-colors">Signup</button>
             </Link>
           </div>
         )}

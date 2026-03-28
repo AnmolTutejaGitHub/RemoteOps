@@ -7,27 +7,26 @@ const { encryptSSH,decryptSSH } = require("../utils/encryption");
 
 router.post("/add-connection", Auth, async (req,res) => {
   try {
-        const {ssh,name} = req.body;
+        const {connectionName,ssh,hostName,ip,type} = req.body;
 
-        if (!ssh) {
-            return res.status(400).send({ error: "SSH key required" });
-        }
-
-        if (!name) {
-            return res.status(400).send({ error: "name is required" });
+        if (!ssh || !connectionName || !hostName || !ip || !type) {
+            return res.status(400).send({ error: "All fields are required" });
         }
 
         const sshEncrypted = encryptSSH(ssh);
 
         const connection = new Connection({
-            type: "Personal",
+            type: type,
             owner_id: req.userId,
-            sshEncrypted,
+            sshEncrypted : sshEncrypted,
+            name : connectionName,
+            hostName : hostName,
+            ip : ip
         });
 
         await connection.save();
 
-        res.status(200).send({ message: "Connection saved" });
+        res.status(200).send({ _id : connection._id });
 
     } catch (err) {
         res.status(500).send({error : "server error"});

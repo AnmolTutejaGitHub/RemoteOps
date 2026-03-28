@@ -17,6 +17,12 @@ const ConnectionSchema = new mongoose.Schema({
     owner_id : {
         type : String, // grp_id or user_id
     },
+    hostName : {
+        type : String,
+    },
+    ip : {
+        type : String,
+    },
     commandHistory : {
         type : [String]
     },
