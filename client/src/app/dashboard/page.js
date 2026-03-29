@@ -63,7 +63,10 @@ export default function Dashboard() {
               <p className="text-[#6B6B6B] text-sm">{user.email}</p>
             </div>
           ) : (
-            <p className="text-sm text-[#6B6B6B]">Loading...</p>
+            <div className="flex flex-col gap-2">
+              <div className="h-5 w-32 rounded bg-[#2E2E2E] animate-pulse" />
+              <div className="h-4 w-48 rounded bg-[#2E2E2E] animate-pulse" />
+            </div>
           )}
           <div className="flex gap-2">
             <button
@@ -84,7 +87,11 @@ export default function Dashboard() {
         <div className="flex flex-col gap-3">
           <p className="text-lg font-semibold">Personal Connections</p>
           {loading ? (
-            <p className="text-sm text-[#6B6B6B]">Loading...</p>
+            <div className="flex gap-3">
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+            </div>
           ) : personalConnections.length === 0 ? (
             <p className="text-sm text-[#6B6B6B]">No personal connections yet.</p>
           ) : (
@@ -106,7 +113,10 @@ export default function Dashboard() {
         <div className="flex flex-col gap-3">
           <p className="text-lg font-semibold">Groups</p>
           {loading ? (
-            <p className="text-sm text-[#6B6B6B]">Loading...</p>
+            <div className="flex gap-3">
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+            </div>
           ) : groups.length === 0 ? (
             <p className="text-sm text-[#6B6B6B]">You are not part of any group.</p>
           ) : (

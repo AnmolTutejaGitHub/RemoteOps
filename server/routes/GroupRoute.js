@@ -29,7 +29,7 @@ router.post("/create-group", Auth, async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ error: "some error occurred" });
+    res.status(500).send(error);
   }
 })
 

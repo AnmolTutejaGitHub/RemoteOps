@@ -14,7 +14,7 @@ export default function CreateGroup() {
     if (!groupName.trim()) return;
     const id = toast.loading("Creating group...");
     try {
-      await axios.post(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/group/create-group`,
         { groupName },
         { withCredentials: true }
@@ -22,10 +22,11 @@ export default function CreateGroup() {
       toast.success("Group created!");
       router.push("/managegroups");
     } catch (err) {
-      toast.error(
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        "Error creating group"
+        toast.error(
+            err.response?.data?.errorResponse?.errmsg ||
+            err.response?.data?.message ||
+            err.response?.data?.error ||
+            "Error creating group"
       );
     } finally {
       toast.dismiss(id);

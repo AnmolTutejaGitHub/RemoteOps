@@ -76,7 +76,10 @@ export default function GroupDetail() {
       <div className="flex flex-col gap-6 p-8">
 
         {loading ? (
-          <p className="text-sm text-[#6B6B6B]">Loading...</p>
+          <div className="flex flex-col gap-2">
+            <div className="h-6 w-40 rounded bg-[#2E2E2E] animate-pulse" />
+            <div className="h-4 w-52 rounded bg-[#2E2E2E] animate-pulse" />
+          </div>
         ) : group ? (
           <div>
             <p className="text-xl font-semibold">{group.name}</p>
@@ -126,7 +129,11 @@ export default function GroupDetail() {
         <div className="flex flex-col gap-3">
           <p className="text-lg font-semibold">Connections</p>
           {loading ? (
-            <p className="text-sm text-[#6B6B6B]">Loading...</p>
+            <div className="flex gap-3">
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+              <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
+            </div>
           ) : connections.length == 0 ? (
             <p className="text-sm text-[#6B6B6B]">No connections in this group.</p>
           ) : (

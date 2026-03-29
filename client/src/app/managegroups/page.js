@@ -51,7 +51,11 @@ export default function ManageGroups() {
         </p>
 
         {loading ? (
-          <p className="text-sm text-[#6B6B6B]">Loading...</p>
+          <div className="flex flex-col gap-2">
+            <div className="h-12 rounded-lg bg-[#2E2E2E] animate-pulse" />
+            <div className="h-12 rounded-lg bg-[#2E2E2E] animate-pulse" />
+            <div className="h-12 rounded-lg bg-[#2E2E2E] animate-pulse" />
+          </div>
         ) : groups.length === 0 ? (
           <p className="text-sm text-[#6B6B6B]">
             You don't admin any groups.{" "}
