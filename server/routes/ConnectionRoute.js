@@ -141,6 +141,36 @@ router.get("/metric/:connectionId", Auth, async (req, res) => {
   }
 })
 
+router.patch("/:connectionId", Auth, async (req, res) => {
+  try {
+    const { connectionId } = req.params;
+    const { name, hostName, ip } = req.body;
+
+    const connection = await Connection.findById(connectionId);
+
+    if (!connection) {
+      return res.status(400).json({ error: "Connection not found" });
+    }
+
+    if (connection.owner?.toString() !== req.userId.toString()) {
+      return res.status(400).json({ error: "You are not owner of this connection" });
+    }
+
+    if (name) connection.name = name;
+    if (hostName) connection.hostName = hostName;
+    if (ip) connection.ip = ip;
+
+    await connection.save();
+
+    res.status(200).json({
+      message: "Connection updated successfully",
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: "Some error occurred" });
+  }
+})
+
 module.exports = router;
 
 // user -> personal connections

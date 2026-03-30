@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Navbar from "@/components/Navbar/Navbar";
+import { IoIosAdd } from "react-icons/io";
 
 export default function GroupDetail() {
   const { groupId } = useParams();
@@ -15,6 +16,7 @@ export default function GroupDetail() {
   const [loading, setLoading] = useState(true);
   const [memberEmail, setMemberEmail] = useState("");
   const [addingMember, setAddingMember] = useState(false);
+  const [removingMemberId, setRemovingMemberId] = useState(null);
 
   async function fetchGroup() {
     const response = await axios.get(
@@ -58,6 +60,7 @@ export default function GroupDetail() {
       );
       toast.success("Member added!");
       setMemberEmail("");
+      await fetchGroup();
     } catch (err) {
       toast.error(
         err.response?.data?.message ||
@@ -67,6 +70,29 @@ export default function GroupDetail() {
     } finally {
       toast.dismiss(id);
       setAddingMember(false);
+    }
+  }
+
+  async function handleRemoveMember(memberId) {
+    setRemovingMemberId(memberId);
+    const id = toast.loading("Removing member...");
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/group/remove-member/${groupId}`,
+        { member_id: memberId },
+        { withCredentials: true }
+      );
+      toast.success("Member removed!");
+      await fetchGroup();
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Error removing member"
+      );
+    } finally {
+      toast.dismiss(id);
+      setRemovingMemberId(null);
     }
   }
 
@@ -96,7 +122,7 @@ export default function GroupDetail() {
             <div className="flex bg-[#121212] text-xs text-[#6B6B6B] uppercase border-b border-[#2E2E2E]">
               <div className="flex-1 px-4 py-3">Members</div>
               {group?.isAdmin && (
-                <div className="w-28 shrink-0 px-4 py-3 text-right">Action</div>
+                <div className="w-28 px-4 py-3 text-right">Action</div>
               )}
             </div>
 
@@ -113,11 +139,13 @@ export default function GroupDetail() {
                 </div>
 
                 {group?.isAdmin && (
-                  <div className="w-28 shrink-0 px-4 py-3 flex justify-end">
+                  <div className="w-28 px-4 py-3 flex justify-end">
                     <button
-                      className="bg-[#212121] text-white border border-[#434343] text-xs cursor-pointer p-2 px-3 rounded-md hover:border-white transition-colors"
+                      onClick={() => handleRemoveMember(member._id)}
+                      disabled={removingMemberId == member._id}
+                      className="bg-[#212121] text-white border border-[#434343] text-xs cursor-pointer p-2 px-3 rounded-md hover:border-red-500 hover:text-red-400 transition-colors disabled:opacity-50"
                     >
-                      Remove
+                      {removingMemberId == member._id ? "Removing..." : "Remove"}
                     </button>
                   </div>
                 )}
@@ -150,7 +178,18 @@ export default function GroupDetail() {
         )}
 
         <div className="flex flex-col gap-3">
-          <p className="text-lg font-semibold">Connections</p>
+          <div className="flex flex-row gap-6">
+            <p className="text-lg font-semibold">Connections</p>
+            {group?.isAdmin && (
+              <div className="flex items-center gap-1 text-xs text-blue-400 cursor-pointer"
+                onClick={() => router.push(`/add-connection`)}
+              >
+                <IoIosAdd />
+                <p>Add Connection</p>
+              </div>
+            )}
+          </div>
+
           {loading ? (
             <div className="flex gap-3">
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
@@ -165,6 +204,9 @@ export default function GroupDetail() {
                 <div className="w-60 px-4 py-3">Name</div>
                 <div className="w-50 px-4 py-3">IP Address</div>
                 <div className="w-80 px-4 py-3">Created At</div>
+                {group?.isAdmin && (
+                  <div className="w-28 px-4 py-3 text-right">Action</div>
+                )}
               </div>
 
               {connections.map((connection) => (
@@ -190,6 +232,17 @@ export default function GroupDetail() {
                   <div className="w-80 px-4 py-3 text-[#9CA3AF] truncate" title={connection.createdAt}>
                     {connection?.createdAt}
                   </div>
+
+                  {group?.isAdmin && (
+                    <div className="w-28 px-4 py-3 flex justify-end items-center">
+                      <button
+                        onClick={() => router.push(`/connection/edit/${connection._id}`)}
+                        className="bg-[#212121] text-white border border-[#434343] text-xs cursor-pointer p-2 px-3 rounded-md transition-colors"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
 

@@ -101,6 +101,7 @@ export default function Dashboard() {
                 <div className="w-60 px-4 py-3">Name</div>
                 <div className="w-50 px-4 py-3">IP Address</div>
                 <div className="w-80 px-4 py-3">Created At</div>
+                <div className="w-28 px-4 py-3 text-right">Action</div>
               </div>
 
               {personalConnections.map((connection) => (
@@ -125,6 +126,14 @@ export default function Dashboard() {
 
                   <div className="w-80 px-4 py-3 text-[#9CA3AF] truncate" title={connection.createdAt}>
                     {connection?.createdAt}
+                  </div>
+                  <div className="w-28 px-4 py-3 flex justify-end items-center">
+                    <button
+                      onClick={() => router.push(`/connection/edit/${connection._id}`)}
+                      className="bg-[#212121] text-white border border-[#434343] text-xs cursor-pointer p-2 px-3 rounded-md transition-colors"
+                    >
+                      Edit
+                    </button>
                   </div>
                 </div>
               ))}

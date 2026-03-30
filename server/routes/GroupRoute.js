@@ -135,7 +135,55 @@ router.get("/:groupId", Auth, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
-});
+})
+
+router.post("/remove-member/:groupId",Auth,async(req,res) =>{
+    try {
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
+        const { member_id } = req.body;
+
+        if (!group) return res.status(400).json({ error: "Group not found" });
+
+        if(group.createdBy.toString()!= req.userId.toString()) {
+            return res.status(400).json({ error: "You are not the admin of this group" });
+        }
+
+        if(group.createdBy.toString() == member_id) {
+            return res.status(400).send({ error: "You are the admin of this group so you can't remove yourself" })
+        }
+
+        group.members = group.members.filter(
+            (memberId) => memberId.toString() != member_id
+        );
+
+       await group.save();
+       res.status(200).json({message : "member removed successfully"});
+    }
+    catch(err) {
+        res.status(500).json({ error : "some error occurred"});
+    }
+})
+
+router.delete("/delete/:groupId",Auth,async(req,res) =>{
+    try {
+        const { groupId } = req.params;
+        const group = await Group.findById(groupId);
+
+        if (!group) return res.status(400).json({ error: "Group not found" });
+
+        if(group.createdBy.toString()!= req.userId.toString()) {
+            return res.status(400).json({ error: "You are not the admin of this group" });
+        }
+
+       await Group.findByIdAndDelete(groupId);
+       
+       res.status(200).json({message : "group deleted successfully"});
+    }
+    catch(err) {
+        res.status(500).json({ error : "some error occurred"});
+    }
+})
 
 
 module.exports = router;

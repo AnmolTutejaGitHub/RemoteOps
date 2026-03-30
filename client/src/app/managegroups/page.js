@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import toast from "react-hot-toast";
 import Navbar from "@/components/Navbar/Navbar";
 
 export default function ManageGroups() {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingGroupId, setDeletingGroupId] = useState(null);
   const router = useRouter();
 
   async function fetchAdminGroups() {
@@ -30,6 +32,28 @@ export default function ManageGroups() {
   useEffect(() => {
     fetchAll();
   }, []);
+
+  async function handleDeleteGroup(groupId) {
+    setDeletingGroupId(groupId);
+    const id = toast.loading("Deleting group...");
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/group/delete/${groupId}`,
+        { withCredentials: true }
+      );
+      toast.success("Group deleted!");
+      await fetchAll();
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        "Error deleting group"
+      );
+    } finally {
+      toast.dismiss(id);
+      setDeletingGroupId(null);
+    }
+  }
 
   return (
     <section className="h-screen w-screen flex flex-col">
@@ -67,19 +91,46 @@ export default function ManageGroups() {
             </button>
           </p>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="border border-[#2E2E2E] rounded-xl text-sm">
+
+            <div className="flex bg-[#121212] text-xs text-[#6B6B6B] uppercase border-b border-[#2E2E2E]">
+              <div className="flex-1 px-4 py-3">Group Name</div>
+              <div className="w-100 px-4 py-3">Created</div>
+              <div className="w-28 px-4 py-3 text-right">Action</div>
+            </div>
+
             {groups.map((group) => (
-              <button
+              <div
                 key={group._id}
-                onClick={() => router.push(`/group/${group._id}`)}
-                className="flex flex-row justify-between items-center bg-[#171717] border border-[#2E2E2E] rounded-lg px-4 py-3 hover:border-white transition-colors"
+                className="flex cursor-pointer border-b border-[#1E1E1E] bg-[#171717] hover:bg-[#121212] items-center"
               >
-                <p className="text-sm font-medium">{group.name}</p>
-                <p className="text-xs text-[#6B6B6B]">
-                  {new Date(group.createdAt).toLocaleDateString()}
-                </p>
-              </button>
+
+                <div
+                  className="flex-1 px-4 py-3 text-[#E5E5E5] truncate"
+                  title={group.name}
+                >
+                  <span onClick={() => router.push(`/group/${group._id}`)} className="text-blue-400">{group.name}</span>
+                </div>
+
+                <div className="w-100 px-4 py-3 text-[#9CA3AF]">
+                  {group.createdAt}
+                </div>
+
+                <div
+                  className="w-28 px-4 py-3 flex justify-end"
+                >
+                  <button
+                    onClick={() => handleDeleteGroup(group._id)}
+                    disabled={deletingGroupId === group._id}
+                    className="bg-[#212121] text-white border border-[#434343] text-xs cursor-pointer p-2 px-3 rounded-md hover:border-red-500 hover:text-red-400 transition-colors disabled:opacity-50"
+                  >
+                    {deletingGroupId === group._id ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
+
+              </div>
             ))}
+
           </div>
         )}
 
