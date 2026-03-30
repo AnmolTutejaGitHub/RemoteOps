@@ -33,6 +33,7 @@ export default function Dashboard() {
       `${process.env.NEXT_PUBLIC_API_URL}/api/group/user-groups`,
       { withCredentials: true }
     );
+    console.log(response.data);
     setGroups(response.data);
   }
 
@@ -92,20 +93,42 @@ export default function Dashboard() {
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
             </div>
-          ) : personalConnections.length === 0 ? (
-            <p className="text-sm text-[#6B6B6B]">No personal connections yet.</p>
           ) : (
-            <div className="flex flex-row flex-wrap gap-3">
-              {personalConnections.map((personalconnection) => (
-                <button
-                  key={personalconnection._id}
-                  onClick={() => router.push(`/connection/${personalconnection._id}`)}
-                  className="w-36 h-36 flex flex-col justify-center items-center bg-[#171717] border border-[#2E2E2E] rounded-lg p-3 hover:border-white transition-colors"
+            <div className="border border-[#2E2E2E] rounded-xl">
+
+              <div className="flex bg-[#121212] text-[#6B6B6B] uppercase border-b border-[#2E2E2E] text-sm">
+                <div className="flex-1 px-4 py-3">Connection ID</div>
+                <div className="w-60 px-4 py-3">Name</div>
+                <div className="w-50 px-4 py-3">IP Address</div>
+                <div className="w-80 px-4 py-3">Created At</div>
+              </div>
+
+              {personalConnections.map((connection) => (
+                <div
+                  key={connection._id}
+                  className="flex border-b border-[#1E1E1E] bg-[#171717] hover:bg-[#121212] text-sm"
                 >
-                  <p className="text-sm text-center font-medium">{personalconnection.name}</p>
-                  <p className="text-xs text-[#6B6B6B] text-center mt-1">{personalconnection.ip}</p>
-                </button>
+                  <div className="flex-1 px-4 py-3">
+                    <span className="text-blue-400 cursor-pointer" onClick={() => router.push(`/connection/${connection._id}`)}
+                      title={connection._id}>
+                      {connection._id}
+                    </span>
+                  </div>
+
+                  <div className="w-60 px-4 py-3 text-[#E5E5E5] truncate" title={connection.name}>
+                    {connection.name}
+                  </div>
+
+                  <div className="w-50 px-4 py-3 text-[#9CA3AF] truncate" title={connection.ip}>
+                    {connection.ip}
+                  </div>
+
+                  <div className="w-80 px-4 py-3 text-[#9CA3AF] truncate" title={connection.createdAt}>
+                    {connection?.createdAt}
+                  </div>
+                </div>
               ))}
+
             </div>
           )}
         </div>
@@ -117,19 +140,39 @@ export default function Dashboard() {
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
             </div>
-          ) : groups.length == 0 ? (
-            <p className="text-sm text-[#6B6B6B]">You are not part of any group.</p>
           ) : (
-            <div className="flex flex-row flex-wrap gap-3">
+            <div className="border border-[#2E2E2E] rounded-xl text-sm">
+              <div className="flex bg-[#121212] text-[#6B6B6B] uppercase border-b border-[#2E2E2E]">
+                <div className="flex-1 px-4 py-3">Group Name</div>
+                <div className="w-100 px-4 py-3">Admin Email</div>
+                <div className="w-100 px-4 py-3">Created At</div>
+              </div>
+
               {groups.map((group) => (
-                <button
+                <div
                   key={group._id}
-                  onClick={() => router.push(`/group/${group._id}`)}
-                  className="w-36 h-36 flex flex-col justify-center items-center bg-[#171717] border border-[#2E2E2E] rounded-lg p-3 hover:border-white transition-colors"
+                  className="flex border-b border-[#1E1E1E] bg-[#171717] hover:bg-[#121212] text-sm"
                 >
-                  <p className="text-sm text-center font-medium">{group.name}</p>
-                </button>
+                  <div
+                    className="flex-1 px-4 py-3 truncate"
+                    title={group.name}
+                  >
+                    <span onClick={() => router.push(`/group/${group._id}`)} className="text-blue-400 cursor-pointer">{group.name}</span>
+                  </div>
+
+                  <div
+                    className="w-100 px-4 py-3 text-[#E5E5E5] truncate"
+                    title={group.createdBy?.email}
+                  >
+                    {group.createdBy?.email}
+                  </div>
+
+                  <div className="w-100 px-4 py-3 text-[#9CA3AF] truncate">
+                    {group.createdAt}
+                  </div>
+                </div>
               ))}
+
             </div>
           )}
         </div>
