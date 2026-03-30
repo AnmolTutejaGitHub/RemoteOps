@@ -1,4 +1,7 @@
-import Navbar from "@/components/Navbar";
+"use client"
+
+import Navbar from "@/components/Navbar/Navbar";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -15,8 +18,9 @@ export default function Home() {
             </div>
 
             <div className="flex gap-8 justify-center">
-              <button className="bg-white text-black p-2 pl-3 pr-3 rounded-md">Get Started</button>
-              <button className="p-2 pl-3 pr-3 rounded-md border">Let's explore</button>
+              <Link href="/dashboard" className="bg-white text-black p-2 pl-3 pr-3 rounded-md cursor-pointer"
+              >Get Started</Link>
+              <Link href="/features" className="p-2 pl-3 pr-3 rounded-md border">Let's explore</Link>
             </div>
           </div>
       </div>

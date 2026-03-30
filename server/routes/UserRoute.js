@@ -247,4 +247,14 @@ router.post('/verifytokenAndGetUserDetails', Auth, async (req, res) => {
     }
 });
 
+router.get('/profile',Auth,async(req, res)=> {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) return res.status(404).send({ error: 'Invalid or expired token' });
+        res.status(200).send({ username: user.name, userid: user._id, email: user.email, createdAt : user.createdAt });
+    }catch(err) {
+        res.status(500).send({error : "server side error"})
+    }
+})
+
 module.exports = router;

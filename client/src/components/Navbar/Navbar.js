@@ -41,8 +41,8 @@ export default function Navbar() {
     <nav className="flex flex-row justify-between items-center p-4">
       <div className="flex flex-row gap-6 items-center">
         <Link href="/" className="font-semibold">RemoteOps</Link>
-        <Link href="/" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Get Started</Link>
-        <Link href="/#features" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Features</Link>
+        <Link href="/dashboard" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Get Started</Link>
+        <Link href="/features" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Features</Link>
       </div>
       <div className="flex flex-row gap-2 items-center">
         {loading ? (
@@ -52,7 +52,7 @@ export default function Navbar() {
           </div>
         ) : username ? (
           <>
-            <span className="text-sm text-[#E5E5E5]">{username}</span>
+            <Link href="/profile" className="text-sm text-[#E5E5E5]">{username}</Link>
             <button
               onClick={handleLogout}
               className="bg-[#212121] text-white border border-[#434343] text-sm p-2 px-3 rounded-md hover:border-white transition-colors"

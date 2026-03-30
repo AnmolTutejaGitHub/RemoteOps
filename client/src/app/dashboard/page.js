@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -117,7 +117,7 @@ export default function Dashboard() {
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
               <div className="w-36 h-36 rounded-lg bg-[#2E2E2E] animate-pulse" />
             </div>
-          ) : groups.length === 0 ? (
+          ) : groups.length == 0 ? (
             <p className="text-sm text-[#6B6B6B]">You are not part of any group.</p>
           ) : (
             <div className="flex flex-row flex-wrap gap-3">

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 
 export default function AddConnection() {
   const router = useRouter();

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 
 export default function ManageGroups() {
   const [groups, setGroups] = useState([]);
