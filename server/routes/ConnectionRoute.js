@@ -141,6 +141,35 @@ router.get("/metric/:connectionId", Auth, async (req, res) => {
   }
 })
 
+
+router.get("/:connectionId", Auth, async (req, res) => {
+  try {
+    const { connectionId } = req.params;
+    const connection = await Connection.findById(connectionId).select("-sshEncrypted");
+    if (!connection) {
+      return res.status(400).json({ error: "Connection not found" });
+    }
+    if (connection.type == 'personal' && connection.owner?.toString() != req.userId) {
+      return res.status(400).json({ error: "You are not owner of this connection" });
+    }
+    if (connection.type == "group") {
+      const group = await Group.findById(connection.group);
+      if (!group) {
+        return res.status(400).json({ error: "Group not found" });
+      }
+      const isMember = group.members.some(
+        (memberId) => memberId.toString() == req.userId
+      )
+      if (!isMember) {
+        return res.status(400).json({ error: "You are not member of this group" });
+      }
+    }
+    res.status(200).json(connection);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+})
+
 router.patch("/:connectionId", Auth, async (req, res) => {
   try {
     const { connectionId } = req.params;
@@ -167,6 +196,24 @@ router.patch("/:connectionId", Auth, async (req, res) => {
     });
 
   } catch (err) {
+    res.status(500).json({ error: "Some error occurred" });
+  }
+})
+
+router.delete("/:connectionId", Auth, async (req, res) => {
+  try {
+    const { connectionId } = req.params;
+    const connection = await Connection.findById(connectionId);
+    if (!connection) {
+      return res.status(400).json({ error: "Connection not found" });
+    }
+    if (connection.owner?.toString() !== req.userId.toString()) {
+      return res.status(400).json({ error: "You are not owner of this connection" });
+    }
+    await connection.deleteOne();
+    res.status(200).json({ message: "Connection deleted successfully" });
+  }
+  catch (err) {
     res.status(500).json({ error: "Some error occurred" });
   }
 })

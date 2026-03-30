@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import Navbar from "@/components/Navbar/Navbar";
+import toast from "react-hot-toast";
 
 export default function Connection() {
   const { connectionID } = useParams();
@@ -12,6 +13,7 @@ export default function Connection() {
   const [metrics, setMetrics] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   async function fetchMetrics() {
     setFetching(true);
@@ -32,6 +34,24 @@ export default function Connection() {
   useEffect(() => {
     fetchMetrics();
   }, [connectionID]);
+
+  async function handleDelete() {
+    setDeleting(true);
+    const id = toast.loading("Deleting connection...");
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/connection/${connectionID}`,
+        { withCredentials: true }
+      );
+      toast.success("Connection deleted!");
+      router.back();
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Failed to delete connection");
+    } finally {
+      toast.dismiss(id);
+      setDeleting(false);
+    }
+  }
 
   function formatTime(dateStr) {
     if (!dateStr) return "—";
@@ -61,6 +81,13 @@ export default function Connection() {
               className="flex items-center gap-2 border border-[#2E2E2E] text-sm px-4 py-2 rounded-md hover:border-white transition-colors disabled:opacity-40"
             >
               {fetching ? <><Loader2 size={14} className="animate-spin" /> Refreshing...</> : "Refresh"}
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="flex items-center gap-2 border border-[#2E2E2E] text-sm px-4 py-2 rounded-md hover:border-red-500 hover:text-red-400 transition-colors disabled:opacity-40"
+            >
+              {deleting ? <><Loader2 size={14} className="animate-spin" /> Deleting...</> : "Delete"}
             </button>
           </div>
         </div>
