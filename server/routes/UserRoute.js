@@ -87,17 +87,18 @@ router.post("/generate-Verification-Token", async (req, res) => {
         );
 
         const transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
+            service: "gmail",
+            port: 587,
+            secure: false,
+            family: 4,
             auth: {
-                user: "anmoltutejaserver@gmail.com",
-                pass: config.NODEMAIL_APP_PASSWORD,
-            },
+                user: config.NODEMAILER_MAIL,
+                pass: config.NODEMAIL_APP_PASSWORD
+            }
         });
 
         const mailOptions = {
-            from: '"RemoteOps" <anmoltutejaserver@gmail.com>',
+            from: `"RemoteOps" <${config.NODEMAILER_MAIL}>`,
             to: user.email,
             subject: 'Email Verification Link',
             html: `
@@ -153,17 +154,18 @@ router.post('/resetPasswordToken', async (req, res) => {
         if (!user) return res.status(400).send({ error: 'Email is not registered with us' });
         const token = jwt.sign({ user_id: user._id, email: user.email }, config.JWT_RESET_PASSWORD_SECRET, { expiresIn: "5m" });
         let transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
+            service: "gmail",
+            port: 587,
+            secure: false,
+            family: 4,
             auth: {
-                user: "anmoltutejaserver@gmail.com",
-                pass: config.NODEMAIL_APP_PASSWORD,
+                user: config.NODEMAILER_MAIL,
+                pass: config.NODEMAIL_APP_PASSWORD
             },
         });
 
         let mailOptions = {
-            from: '"RemoteOps" <anmoltutejaserver@gmail.com>',
+            from: `"RemoteOps" <${config.NODEMAILER_MAIL}>`,
             to: email,
             subject: 'Password Reset Link',
             text: `You requested to reset your password. Click the link below to proceed. This link is valid for 5 minutes:\n\n${config.FRONTEND_URL}/update-password/${token}`,
