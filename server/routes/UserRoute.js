@@ -6,7 +6,8 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
 const bcrypt = require("bcrypt");
-
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
 
 const COOKIE_OPTIONS = {
     httpOnly: true,
@@ -87,14 +88,13 @@ router.post("/generate-Verification-Token", async (req, res) => {
         );
 
         const transporter = nodemailer.createTransport({
-            service: "gmail",
-            port: 587,
-            secure: false,
-            family: 4,
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
                 user: config.NODEMAILER_MAIL,
                 pass: config.NODEMAIL_APP_PASSWORD
-            }
+            },
         });
 
         const mailOptions = {
@@ -153,11 +153,10 @@ router.post('/resetPasswordToken', async (req, res) => {
         const user = await User.findOne({ email: email });
         if (!user) return res.status(400).send({ error: 'Email is not registered with us' });
         const token = jwt.sign({ user_id: user._id, email: user.email }, config.JWT_RESET_PASSWORD_SECRET, { expiresIn: "5m" });
-        let transporter = nodemailer.createTransport({
-            service: "gmail",
-            port: 587,
-            secure: false,
-            family: 4,
+        const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
                 user: config.NODEMAILER_MAIL,
                 pass: config.NODEMAIL_APP_PASSWORD
@@ -249,13 +248,13 @@ router.post('/verifytokenAndGetUserDetails', Auth, async (req, res) => {
     }
 });
 
-router.get('/profile',Auth,async(req, res)=> {
+router.get('/profile', Auth, async (req, res) => {
     try {
         const user = await User.findById(req.userId);
         if (!user) return res.status(404).send({ error: 'Invalid or expired token' });
-        res.status(200).send({ username: user.name, userid: user._id, email: user.email, createdAt : user.createdAt });
-    }catch(err) {
-        res.status(500).send({error : "server side error"})
+        res.status(200).send({ username: user.name, userid: user._id, email: user.email, createdAt: user.createdAt });
+    } catch (err) {
+        res.status(500).send({ error: "server side error" })
     }
 })
 
