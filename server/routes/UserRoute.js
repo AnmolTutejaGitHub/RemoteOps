@@ -6,8 +6,6 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require("nodemailer");
 const config = require("../config/config");
 const bcrypt = require("bcrypt");
-const dns = require("dns");
-dns.setDefaultResultOrder("ipv4first");
 
 const COOKIE_OPTIONS = {
     httpOnly: true,
