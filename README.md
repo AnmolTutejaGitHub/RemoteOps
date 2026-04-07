@@ -88,7 +88,7 @@ Refer to [CHANGELOG](CHANGELOG.md) for version history and updates.
 
 ### Contributing
 
-We appreciate your interest in contributing to 64! Your contributions help us improve and grow. Please feel free to submit pull requests, report issues, or suggest new features. Your feedback and participation are highly valued as we continue to develop and enhance the platform.
+We appreciate your interest in contributing to RemoteOps! Your contributions help us improve and grow. Please feel free to submit pull requests, report issues, or suggest new features. Your feedback and participation are highly valued as we continue to develop and enhance the platform.
 
 ### License
 
