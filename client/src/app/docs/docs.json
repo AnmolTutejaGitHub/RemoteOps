@@ -1,0 +1,137 @@
+[
+  {
+    "id": 0,
+    "icon": "BsFileText",
+    "label": "Getting Started",
+    "content": {
+      "title": "Getting Started",
+      "sections": [
+        {
+          "heading": "What is RemoteOps?",
+          "body": "RemoteOps is an open-source remote server management dashboard. It lets you connect to your servers via SSH directly from the browser, manage team access through groups, and keep all your connections organised in one place."
+        },
+        {
+          "heading": "Prerequisites",
+          "body": "You need a RemoteOps account (free), and your target server must accept SSH connections on port 22 or a custom port. No client-side SSH software is required."
+        },
+        {
+          "heading": "1. Create an account",
+          "body": "Head to /signup and fill in your username, email and password. You will receive a verification email. Click the link to activate your account.",
+          "code": "# No CLI needed. Everything lives in the browser."
+        },
+        {
+          "heading": "2. Add your first connection",
+          "body": "From the Dashboard click \"Add Connection\". Enter a display name, the server's IP address or hostname, the SSH port, and the username you use to log in."
+        },
+        {
+          "heading": "3. Launch the terminal",
+          "body": "Click the connection ID in the dashboard table. RemoteOps opens a live SSH session in your browser powered by xterm.js and a WebSocket tunnel. No local terminal needed."
+        }
+      ]
+    }
+  },
+  {
+    "id": 1,
+    "icon": "BsTerminal",
+    "label": "SSH Terminal",
+    "content": {
+      "title": "SSH Terminal",
+      "sections": [
+        {
+          "heading": "How it works",
+          "body": "RemoteOps proxies your SSH session through a Node.js WebSocket server using the ssh2 library. Your browser connects to the WebSocket endpoint and the server performs the actual SSH handshake on your behalf."
+        },
+        {
+          "heading": "Session security",
+          "body": "Sessions are authenticated via your RemoteOps cookie. The server verifies your session before opening any SSH connection. Connections are scoped to your user or your groups, so there is no cross-user access."
+        },
+        {
+          "heading": "Reconnecting",
+          "body": "If the WebSocket drops due to a network blip or server restart, refresh the page and re-open the connection from the dashboard. Session state on the remote server is preserved as long as your shell session is still alive."
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "icon": "BsPeopleFill",
+    "label": "Groups",
+    "content": {
+      "title": "Groups",
+      "sections": [
+        {
+          "heading": "Overview",
+          "body": "Groups let you share server connections with teammates without handing out credentials. Create a group, add connections to it, and invite members by email."
+        },
+        {
+          "heading": "Creating a group",
+          "body": "Go to Dashboard, then Manage Groups, then Create Group. Give the group a name and you become the admin automatically."
+        },
+        {
+          "heading": "Inviting members",
+          "body": "From the group detail page, enter a team member's registered RemoteOps email and click Invite. They will see the group and its connections in their dashboard right away."
+        },
+        {
+          "heading": "Admin controls",
+          "body": "As the group admin you can remove members, delete the group, and add or remove connections. Regular members can view and open connections but cannot modify the group."
+        },
+        {
+          "heading": "Permissions summary",
+          "code": "Admin   create, read, update, delete group\n        add/remove members\n        add/remove connections\n\nMember  read group\n        open connections (SSH)"
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "icon": "MdLockOutline",
+    "label": "Authentication",
+    "content": {
+      "title": "Authentication",
+      "sections": [
+        {
+          "heading": "Session cookies",
+          "body": "RemoteOps uses HttpOnly session cookies, not localStorage ."
+        },
+        {
+          "heading": "Email verification",
+          "body": "After signup you receive a verification link. Unverified accounts cannot open SSH sessions. The link expires after some time and you can request a new one from the login page."
+        },
+        {
+          "heading": "Password reset",
+          "body": "Visit /forgot-password, enter your email, and you will receive a time-limited reset link."
+        },
+        {
+          "heading": "Logout",
+          "body": "Clicking Logout issues a server-side cookie deletion. The session is invalidated on the backend before the cookie is cleared in the browser."
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "icon": "BsCode",
+    "label": "API Reference",
+    "content": {
+      "title": "API Reference",
+      "sections": [
+        {
+          "heading": "Base URL",
+          "code": "https://api.remoteops.anmoltuteja.in/api"
+        },
+        {
+          "heading": "User",
+          "code": "POST   /user/signup                    register a new user\nPOST   /user/login                     login and receive session cookie\nGET    /user/logout                    invalidate session\nGET    /user/me                        get current user info\nGET    /user/verify/:token             verify email\nPOST   /user/forgot-password           request password reset\nPATCH  /user/reset-password/:token     reset password"
+        },
+        {
+          "heading": "Connections",
+          "code": "POST   /connection/add                              add a connection\nGET    /connection/user-connections/personal         list personal connections\nGET    /connection/:id                              get connection by ID\nPATCH  /connection/edit/:id                         update connection\nDELETE /connection/delete/:id                       delete connection"
+        },
+        {
+          "heading": "Groups",
+          "code": "POST   /group/create               create a group\nGET    /group/user-groups            list groups for current user\nGET    /group/:id                   get group detail\nPOST   /group/:id/invite            invite a member\nDELETE /group/:id/member/:uid       remove a member\nDELETE /group/:id                   delete group (admin only)"
+        }
+      ]
+    }
+  }
+]

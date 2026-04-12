@@ -41,8 +41,8 @@ export default function Navbar() {
     <nav className="flex flex-row justify-between items-center p-4">
       <div className="flex flex-row gap-6 items-center">
         <Link href="/" className="font-semibold">RemoteOps</Link>
-        <Link href="/dashboard" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Get Started</Link>
-        <Link href="/features" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Features</Link>
+          <Link href="/dashboard" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Dashboard</Link>
+        <Link href="/docs" className="text-[#6B6B6B] hover:text-white text-sm transition-colors">Documentation</Link>
       </div>
       <div className="flex flex-row gap-2 items-center">
         {loading ? (
